@@ -3,16 +3,6 @@ from ortools.linear_solver import pywraplp
 
 
 
-def verifica_conflito(i, x, indices, conflicts, num_conflicts):
-	for c in range(num_conflicts):
-		if i == conflicts[c][0] or i == conflicts[c][1]:
-			for j in indices:
-				if (j == conflicts[c][1] or j == conflicts[c][1]) and (x[j]==1) and (j != i):
-					#print('sim, elimina', c)
-					return True
-	#print('nop, mantém', c)
-	return False
-
 def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 
 	print('----- algoritmo v5 ------')
@@ -35,21 +25,34 @@ def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 
     # Constraints
     # The amount packed in each bin cannot exceed its capacity.
+	
 	solver.Add(
 		sum(x[i] * weights[i]
 			for i in indices) <= capacity)
+
 	# ---------------------------------------------------------
 	if num_conflicts > 0:
-		for a in range(num_items):
-			for i in indices:
-				if not verifica_conflito(i, x, indices, conflicts, num_conflicts):
-					solver.Add(x[i] == 1)
+		
+		# Esse foi + ou -
+		for a, b in conflicts:
+			#print(a,b)
+			solver.Add(x[a] == 0 or x[b] == 0)
+		
+
+		'''	
+		solver.Add(
+			sum(x[i] * x[j]
+				for i in conflicts
+					for j in conflicts) == 0)
+		'''		
+		#solver.Add((x[i]*x[j]for i,j in conflicts) == 0)
 	# ---------------------------------------------------------
     # Objective
 	objective = solver.Objective()
 	
 	for i in indices:
 		objective.SetCoefficient(x[i], values[i])
+
 	objective.SetMaximization()
 	
 	status = solver.Solve()
@@ -75,6 +78,3 @@ def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 	output_data += ' '.join(map(str, solution))
 	
 	return output_data
-
-
-

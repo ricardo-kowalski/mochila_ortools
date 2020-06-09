@@ -3,16 +3,6 @@ from ortools.linear_solver import pywraplp
 
 
 
-def verifica_conflito(i, x, indices, conflicts, num_conflicts):
-	for c in range(num_conflicts):
-		if i == conflicts[c][0] or i == conflicts[c][1]:
-			for j in indices:
-				if (j == conflicts[c][1] or j == conflicts[c][1]) and (x[j]==1) and (j != i):
-					#print('sim, elimina', c)
-					return True
-	#print('nop, mantém', c)
-	return False
-
 def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 
 	print('----- algoritmo v5 ------')
@@ -40,10 +30,12 @@ def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 			for i in indices) <= capacity)
 	# ---------------------------------------------------------
 	if num_conflicts > 0:
-		for a in range(num_items):
-			for i in indices:
-				if not verifica_conflito(i, x, indices, conflicts, num_conflicts):
-					solver.Add(x[i] == 1)
+		#for a in range(num_items):
+		for i in indices:
+			if verifica_conflito(i, x, indices, conflicts, num_conflicts):
+				solver.Add(x[i] == 0)
+			else:
+				solver.Add(x[i] == 0)	
 	# ---------------------------------------------------------
     # Objective
 	objective = solver.Objective()
@@ -77,4 +69,12 @@ def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 	return output_data
 
 
-
+def verifica_conflito(i, x, indices, conflicts, num_conflicts):
+	print('entra', i)
+	for c in range(num_conflicts):
+		for j in indices:
+			if ((j == conflicts[c][1] and i == conflicts[c][0]) or (j == conflicts[c][0] and i == conflicts[c][1])) and (x[j]==1) and (j != i):
+				print('sim, elimina', c)
+				return True
+	#print('nop, mantém', c)
+	return False

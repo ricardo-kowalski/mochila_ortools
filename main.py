@@ -1,4 +1,4 @@
-from algoritmo_v5 import algoritmo
+from algoritmo_v3_abordagem_2 import algoritmo
 
 from collections import namedtuple
 Item = namedtuple("Item", ['index', 'value', 'weight'])
@@ -50,17 +50,12 @@ def solve_it(input_data):
     return algoritmo(item_count, items, capacity, conflict_count, conflicts)
 
 if __name__ == '__main__':
-	with open('ks_30_0_wc', 'r') as input_data_file:
+	filename = 'ks_200_0_wc'
+	with open(filename, 'r') as input_data_file:
 		input_data = input_data_file.read()
 	output_data = solve_it(input_data)
 	#print(output_data)
-
-	'''
-	solution_file = open(file_location + ".sol", "w")
-	solution_file.write(output_data)
-	solution_file.close()
-    else:
-        print('This test requires an input file.  Please select one from the data directory. (i.e. python solver.py ./data/ks_4_0)')
-        '''
-
-
+	#solution_file = open('output/'+ filename + ".sol", "w")
+	#solution_file.write(output_data)
+	#solution_file.close()
+   
