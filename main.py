@@ -53,7 +53,7 @@ if __name__ == '__main__':
 	with open('ks_30_0_wc', 'r') as input_data_file:
 		input_data = input_data_file.read()
 	output_data = solve_it(input_data)
-	print(output_data)
+	#print(output_data)
 
 	'''
 	solution_file = open(file_location + ".sol", "w")
