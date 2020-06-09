@@ -50,7 +50,7 @@ def solve_it(input_data):
     return algoritmo(item_count, items, capacity, conflict_count, conflicts)
 
 if __name__ == '__main__':
-	with open('ks_4_0_wc', 'r') as input_data_file:
+	with open('ks_30_0_wc', 'r') as input_data_file:
 		input_data = input_data_file.read()
 	output_data = solve_it(input_data)
 	print(output_data)

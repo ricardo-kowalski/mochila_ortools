@@ -22,9 +22,11 @@ def create_data_model():
 
 def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 
+	print('----- algoritmo v5 ------')
+
 	values = [i.value for i in items]
 	weights = [i.weight for i in items]
-	print('values',values, '\nweights', weights, '\nconflicts', conflicts)
+	#print('values',values, '\nweights', weights, '\nconflicts', conflicts)
 
 	indices = list(range(num_items))
 
@@ -45,18 +47,10 @@ def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 			for i in indices) <= capacity)
 	# ---------------------------------------------------------
 	if num_conflicts > 0:
-		for a in range(4):
-			for i in indices:
-				if verifica_conflitos_pt1(i, x, indices, conflicts, num_conflicts):
-					solver.Add(x[i] == 0)
-				else:
-					solver.Add(x[i] == 1)
-					
-			for i in indices:
-				if verifica_conflitos_pt2(i, x, indices, conflicts, num_conflicts):
-					solver.Add(x[i] == 0)
-				else:
-					solver.Add(x[i] == 1)		
+		#for a in range(num_items):
+		for i in indices:
+			if not verifica_conflito(i, x, indices, conflicts, num_conflicts):
+				solver.Add(x[i] == 1)
 	# ---------------------------------------------------------
     # Objective
 	objective = solver.Objective()
@@ -78,23 +72,12 @@ def algoritmo(num_items, items, capacity, num_conflicts, conflicts):
 		print('The problem does not have an optimal solution.')
 
 
-def verifica_conflitos_pt1(i, x, indices, conflicts, num_conflicts):
+def verifica_conflito(i, x, indices, conflicts, num_conflicts):
 	for c in range(num_conflicts):
-		if i == conflicts[c][0]:
+		if i == conflicts[c][0] or i == conflicts[c][1]:
 			for j in indices:
-				if j == conflicts[c][1] and x[j]==1 and j != i:
-					print('sim, elimina', c)
+				if (j == conflicts[c][1] or j == conflicts[c][1]) and (x[j]==1) and (j != i):
+					#print('sim, elimina', c)
 					return True
-	print('nop, mantém', c)
-	return False
-
-
-def verifica_conflitos_pt2(i, x, indices, conflicts, num_conflicts):
-	for c in range(num_conflicts):
-		if i == conflicts[c][1]:
-			for j in indices:
-				if j == conflicts[c][0] and x[j]==1 and j != i:
-					print('sim, elimina', c)
-					return True
-	print('nop, mantém', c)
+	#print('nop, mantém', c)
 	return False
